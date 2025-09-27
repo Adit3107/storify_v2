@@ -1,5 +1,5 @@
 /**
- * Database Schema for Droply
+ * Database Schema for Storify
  *
  * This file defines the database structure for our Droply application.
  * We're using Drizzle ORM with PostgreSQL (via Neon) for our database.
@@ -61,14 +61,14 @@ export const files = pgTable("files", {
  * This creates a hierarchical file structure similar to a real filesystem.
  */
 export const filesRelations = relations(files, ({ one, many }) => ({
-  // Relationship to parent folder
   parent: one(files, {
-    fields: [files.parentId], // The foreign key in this table
-    references: [files.id], // The primary key in the parent table
+    fields: [files.parentId],
+    references: [files.id],
+    relationName: "files_parent",
   }),
-
-  // Relationship to child files/folders
-  children: many(files),
+  children: many(files, {
+    relationName: "files_parent",
+  }),
 }));
 
 /**
